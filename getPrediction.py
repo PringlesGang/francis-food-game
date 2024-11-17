@@ -6,7 +6,7 @@ from predictions import PredictionType, getPrediction
 
 
 PredictionMethod: PredictionType = PredictionType.SAMPLE_MEAN
-DistributionMethod: DistributionType = DistributionType.RANDOM
+DistributionMethod: DistributionType = DistributionType.NORMAL
 
 def readData() -> pd.DataFrame:
     return pd.read_csv("./data.csv")
@@ -38,6 +38,8 @@ def runTest(rounds: int, log: bool) -> int:
         if log:
             print(f"{i}: \tPrediction={prediction} \tOpa={opaRating} \tOma={omaRating} \tTotal={rating} \tScore={score}")
     
+    if log:
+        print(f"Total score: {score} \tAverage difference: {score / rounds}")
     return score
 
 def runManyTests(tests: int, rounds: int) -> None:
@@ -53,13 +55,14 @@ def runManyTests(tests: int, rounds: int) -> None:
 
 def nextPrediction() -> None:
     data: pd.DataFrame = readData()
-    opa: pd.DataFrame = data["opa"]
-    oma: pd.DataFrame = data["oma"]
+    opa: pd.DataFrame = pd.DataFrame(data["opa"])
+    oma: pd.DataFrame = pd.DataFrame(data["oma"])
 
-    prediction: int = getPrediction(opa, oma, True)
+    prediction: int = getPrediction(PredictionMethod, opa, oma, True)
 
     print(f"Final prediction: {prediction}")
 
 if __name__ == "__main__":
-    # nextPrediction()
-    runManyTests(100, 26)
+    nextPrediction()
+    # runTest(17, True)
+    # runManyTests(100, 17)

@@ -7,7 +7,7 @@ class PredictionType(Enum):
     SAMPLE_MEAN = 1
     UNIFORM_MEAN = 2
 
-def getSamplePrediction(data: pd.DataFrame) -> float:
+def getSampleMean(data: pd.DataFrame) -> float:
     if (data.size == 0):
         return 8
     
@@ -19,7 +19,7 @@ def getUniformMean() -> float:
 def getSinglePrediction(predictionMethod: PredictionType, data: pd.DataFrame) -> float:
     match predictionMethod:
         case PredictionType.SAMPLE_MEAN:
-            return getSamplePrediction(data)
+            return getSampleMean(data)
         case _: # Uniform mean
             return getUniformMean()
 

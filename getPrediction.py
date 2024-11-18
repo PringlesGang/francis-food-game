@@ -11,7 +11,7 @@ DistributionMethod: DistributionType = DistributionType.NORMAL
 def readData() -> pd.DataFrame:
     return pd.read_csv("./data.csv")
 
-def runTest(rounds: int, log: bool) -> int:
+def runTest(rounds: int, log: bool) -> float:
     distributionOpa: Tuple[float] = getDistribution(DistributionMethod)
     distributionOma: Tuple[float] = getDistribution(DistributionMethod)
 
@@ -23,9 +23,9 @@ def runTest(rounds: int, log: bool) -> int:
     dataOpa: pd.DataFrame = pd.DataFrame()
     dataOma: pd.DataFrame = pd.DataFrame()
 
-    score: int = 0
+    score: float = 0
     for i in range(rounds):
-        prediction: int = getPrediction(PredictionMethod, dataOpa, dataOma, False)
+        prediction: float = getPrediction(PredictionMethod, dataOpa, dataOma, False)
 
         opaRating: int = sampleDistribution(distributionOpa)
         omaRating: int = sampleDistribution(distributionOma)
@@ -43,9 +43,9 @@ def runTest(rounds: int, log: bool) -> int:
     return score
 
 def runManyTests(tests: int, rounds: int) -> None:
-    results: List[int] = []
+    results: List[float] = []
 
-    sum: int = 0
+    sum: float = 0
     for i in range(tests):
         results.append(runTest(rounds, False))
         sum += results[i]
@@ -58,7 +58,7 @@ def nextPrediction() -> None:
     opa: pd.DataFrame = pd.DataFrame(data["opa"])
     oma: pd.DataFrame = pd.DataFrame(data["oma"])
 
-    prediction: int = getPrediction(PredictionMethod, opa, oma, True)
+    prediction: float = getPrediction(PredictionMethod, opa, oma, True)
 
     print(f"Final prediction: {prediction}")
 

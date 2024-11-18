@@ -23,7 +23,7 @@ def getSinglePrediction(predictionMethod: PredictionType, data: pd.DataFrame) ->
         case _: # Uniform mean
             return getUniformMean()
 
-def getPrediction(predictionMethod: PredictionType, opa: pd.DataFrame, oma: pd.DataFrame, log: bool) -> int:
+def getPrediction(predictionMethod: PredictionType, opa: pd.DataFrame, oma: pd.DataFrame, log: bool) -> float:
     opaPrediction: float = getSinglePrediction(predictionMethod, opa)
     omaPrediction: float = getSinglePrediction(predictionMethod, oma)
 
@@ -32,4 +32,4 @@ def getPrediction(predictionMethod: PredictionType, opa: pd.DataFrame, oma: pd.D
         print(f"Oma prediction: {omaPrediction}")
 
     aggregate: float = getSinglePrediction(predictionMethod, opa) + getSinglePrediction(predictionMethod, oma)
-    return int(round(aggregate))
+    return aggregate

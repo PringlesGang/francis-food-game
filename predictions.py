@@ -8,6 +8,8 @@ class PredictionType(Enum):
     UNIFORM_MEAN = 2
     SAMPLE_MEDIAN = 3
     SAMPLE_MODE = 4
+    EXPONENTIAL_AVERAGE = 5
+    
 
 def getSampleMean(data: pd.DataFrame) -> float:
     if (data.size == 0):
@@ -30,6 +32,13 @@ def getSampleMode(data: pd.DataFrame) -> float:
 def getUniformMean() -> float:
     return 10
 
+def getExponentialAverage(data: pd.DataFrame, alpha: float) -> float:
+    if (data.size == 0):
+        return 8
+    
+    return alpha * pd.to_numeric(data[-1]).iloc[0] + (1 - alpha) * getExponentialAverage(data[:-1], alpha)
+    
+
 def getSinglePrediction(predictionMethod: PredictionType, data: pd.DataFrame) -> float:
     match predictionMethod:
         case PredictionType.SAMPLE_MEAN:
@@ -38,6 +47,8 @@ def getSinglePrediction(predictionMethod: PredictionType, data: pd.DataFrame) ->
             return getSampleMedian(data)
         case PredictionType.SAMPLE_MODE:
             return getSampleMode(data)
+        case PredictionType.EXPONENTIAL_AVERAGE:
+            return getExponentialAverage(data, 0.8)
         case _: # Uniform mean
             return getUniformMean()
 
@@ -50,4 +61,4 @@ def getPrediction(predictionMethod: PredictionType, opa: pd.DataFrame, oma: pd.D
         print(f"Oma prediction: {omaPrediction}")
 
     aggregate: float = getSinglePrediction(predictionMethod, opa) + getSinglePrediction(predictionMethod, oma)
-    return aggregate
+    return float(aggregate)

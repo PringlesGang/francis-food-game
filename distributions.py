@@ -61,6 +61,6 @@ def sampleDistribution(distribution: Tuple[float]) -> int:
     for rating, mass in enumerate(distribution):
         sum += mass
         if sample <= sum:
-            return rating
+            return int(rating)
     
     return 10

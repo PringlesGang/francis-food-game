@@ -23,6 +23,8 @@ def runTest(rounds: int, log: bool) -> float:
     dataOpa: pd.DataFrame = pd.DataFrame()
     dataOma: pd.DataFrame = pd.DataFrame()
 
+    worstThree: List[float] = []
+
     score: float = 0
     for i in range(rounds):
         prediction: float = getPrediction(PredictionMethod, dataOpa, dataOma, False)
@@ -33,10 +35,21 @@ def runTest(rounds: int, log: bool) -> float:
         dataOma[-1] = [omaRating]
         rating: int = opaRating + omaRating
 
-        score -= abs(prediction - rating)
+        difference: float = abs(prediction - rating)
+        score -= difference
+        if len(worstThree) < 3:
+            worstThree.append(difference)
+            worstThree.sort(reverse = True)
+        elif difference > worstThree[-1]:
+            worstThree.pop(-1)
+            worstThree.append(difference)
+            worstThree.sort(reverse = True)
 
         if log:
-            print(f"{i}: \tPrediction={prediction} \tOpa={opaRating} \tOma={omaRating} \tTotal={rating} \tScore={score}")
+            print(f"{i}: \tPredicted={prediction} \tOpa={opaRating} \tOma={omaRating} \tTotal={rating} \tDifference={difference} \tScore={score}")
+    
+    for worst in worstThree:
+        score += worst
     
     if log:
         print(f"Total score: {score} \tAverage difference: {score / rounds}")
